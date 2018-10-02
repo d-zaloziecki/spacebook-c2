@@ -1,26 +1,35 @@
     /**
      * @class Responsible for storing and manipulating Spacebook posts, in-memory
      */
+
 class PostsRepository {
     constructor() {
         this.posts = [];
     }
 
-    addPost(postText) {
-        this.posts.push({ text: postText, comments: [] });
+    getPosts() {
+        return $.get('/posts').then((posts)=>{this.posts = posts})
     }
 
-    removePost(index) {
-        this.posts.splice(index, 1);
+    addPost(postText) {
+      return $.post('/addPost', {postText: postText}).then((data)=>{
+            this.posts = data;
+        })
+    }
+
+    removePost(id) {
+        return $.post('/deletePost', {id: id}).then((data)=>{this.posts=data})
     }
     
-    addComment(newComment, postIndex) {
-        this.posts[postIndex].comments.push(newComment);
+    addComment(newComment, postId) {
+        return $.post('/addComment', {commentText: newComment.commentText, writerName: newComment.writerName, postId: postId}).then((data)=>{
+            this.posts = data;
+        })
     };
 
-    deleteComment(postIndex, commentIndex) {
-        this.posts[postIndex].comments.splice(commentIndex, 1);
-      };
+    deleteComment(postId, commentId) {
+        return $.post('/deleteComment', {commentId: commentId, postId: postId}).then((data)=>{this.posts=data})
+    };
 }
 
 export default PostsRepository

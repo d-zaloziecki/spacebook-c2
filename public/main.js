@@ -6,6 +6,7 @@ let postsRepository = new PostsRepository();
 let postsRenderer = new PostsRenderer();
 let eventsHandler = new EventsHandler(postsRepository, postsRenderer);
 
+eventsHandler.getPostsFromDB()
 eventsHandler.registerAddPost();
 eventsHandler.registerRemovePost();
 eventsHandler.registerToggleComments();
