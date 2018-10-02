@@ -5,34 +5,32 @@ class EventsHandler {
         this.$posts = $(".posts");
     }
 
-    getPostsFromDB() {
-        this.postsRepository.getPosts().then(()=>{
-            this.postsRenderer.renderPosts(this.postsRepository.posts);
-        })
+    async getPostsFromDB() {
+        await this.postsRepository.getPosts();
+        this.postsRenderer.renderPosts(this.postsRepository.posts);
     }
 
     registerAddPost() {
-        $('#addpost').on('click', () => {
+        $('#addpost').on('click', async () => {
             let $input = $("#postText");
             if ($input.val() === "") {
                 alert("Please enter text!"); 
-            } else {
-                this.postsRepository.addPost($input.val()).then(()=>{
-                    this.postsRenderer.renderPosts(this.postsRepository.posts);
-                    $input.val("");
-                })
+                return;
             }
+
+            await this.postsRepository.addPost($input.val());
+            this.postsRenderer.renderPosts(this.postsRepository.posts);
+            $input.val("");
         });        
     }
 
-    registerRemovePost() {
-        this.$posts.on('click', '.remove-post', (event) => {
+    async registerRemovePost() {
+        this.$posts.on('click', '.remove-post', async(event) => {
             let id = $(event.currentTarget).closest('.post').data().id;
-            this.postsRepository.removePost(id).then(()=>{
-                this.postsRenderer.renderPosts(this.postsRepository.posts);
-            })
-          });
 
+            await this.postsRepository.removePost(id)
+            this.postsRenderer.renderPosts(this.postsRepository.posts);
+        });
     }
 
     registerToggleComments() {
@@ -42,8 +40,8 @@ class EventsHandler {
           });
     }
 
-    registerAddComment() {
-        this.$posts.on('click', '.add-comment', (event) => {
+    async registerAddComment() {
+        this.$posts.on('click', '.add-comment', async(event) => {
             let $comment = $(event.currentTarget).siblings('.comment');
             let $user = $(event.currentTarget).siblings('.name');
           
@@ -55,23 +53,20 @@ class EventsHandler {
             let postId = $(event.currentTarget).closest('.post').data().id;
             let newComment = { commentText: $comment.val(), writerName: $user.val() };
             
-            this.postsRepository.addComment(newComment, postId).then(()=>{
-                this.postsRenderer.renderPosts(this.postsRepository.posts);
-                $comment.val("");
-                $user.val("");
-            })
-            
-          });
-
+            await this.postsRepository.addComment(newComment, postId);
+            this.postsRenderer.renderPosts(this.postsRepository.posts);
+            $comment.val("");
+            $user.val("");
+      });
     }
 
     registerRemoveComment() {
-        this.$posts.on('click', '.remove-comment', (event) => {
+        this.$posts.on('click', '.remove-comment', async(event) => {
             let postId = $(event.currentTarget).closest('.post').data().id;
             let commentId = $(event.currentTarget).closest('.comment').data().id;
-            this.postsRepository.deleteComment(postId, commentId).then(()=>{
-                this.postsRenderer.renderPosts(this.postsRepository.posts);
-            })
+
+            await this.postsRepository.deleteComment(postId, commentId)
+            this.postsRenderer.renderPosts(this.postsRepository.posts);
         });
     }
 }

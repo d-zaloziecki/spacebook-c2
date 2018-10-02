@@ -7,17 +7,19 @@ class PostsRepository {
         this.posts = [];
     }
 
-    getPosts() {
-        return $.get('/posts').then((posts)=>{this.posts = posts})
+    async getPosts() {
+        return $.get('/posts').then((posts)=>{
+         this.posts = posts
+        })
     }
 
-    addPost(postText) {
-      return $.post('/posts', {postText: postText}).then((data)=>{
+    async addPost(postText) {
+        return $.post('/posts', {postText: postText}).then((data)=>{
             this.posts = data;
         })
     }
 
-    removePost(id) {
+    async removePost(id) {
         return $.ajax({
             url: '/posts/' + id,
             method: 'DELETE',
@@ -28,19 +30,16 @@ class PostsRepository {
             error: (request,msg,error)=> {
                 console.log(error)
             }
-        }); 
-        
-        
-        // $.post('/deletePost', {id: id}).then((data)=>{this.posts=data})
+        });         
     }
     
-    addComment(newComment, postId) {
+    async addComment(newComment, postId) {
         return $.post('/comments', {commentText: newComment.commentText, writerName: newComment.writerName, postId: postId}).then((data)=>{
             this.posts = data;
         })
     };
 
-    deleteComment(postId, commentId) {
+    async deleteComment(postId, commentId) {
         return $.ajax({
             url: '/comments/' + postId + "/" + commentId,
             method: 'DELETE',
@@ -51,9 +50,7 @@ class PostsRepository {
             error: (request,msg,error)=> {
                 console.log(error)
             }
-        }); 
-        
-        // $.post('/comments/', {commentId: commentId, postId: postId}).then((data)=>{this.posts=data})
+        });         
     };
 }
 
