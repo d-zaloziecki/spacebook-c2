@@ -6,8 +6,7 @@ class EventsHandler {
     }
 
     getPostsFromDB() {
-        let promise = this.postsRepository.getPosts()
-        promise.then(()=>{
+        this.postsRepository.getPosts().then(()=>{
             this.postsRenderer.renderPosts(this.postsRepository.posts);
         })
     }
@@ -18,8 +17,7 @@ class EventsHandler {
             if ($input.val() === "") {
                 alert("Please enter text!"); 
             } else {
-                let promise = this.postsRepository.addPost($input.val());
-                promise.then(()=>{
+                this.postsRepository.addPost($input.val()).then(()=>{
                     this.postsRenderer.renderPosts(this.postsRepository.posts);
                     $input.val("");
                 })
@@ -30,8 +28,7 @@ class EventsHandler {
     registerRemovePost() {
         this.$posts.on('click', '.remove-post', (event) => {
             let id = $(event.currentTarget).closest('.post').data().id;
-            let promise = this.postsRepository.removePost(id);
-            promise.then(()=>{
+            this.postsRepository.removePost(id).then(()=>{
                 this.postsRenderer.renderPosts(this.postsRepository.posts);
             })
           });
@@ -58,8 +55,7 @@ class EventsHandler {
             let postId = $(event.currentTarget).closest('.post').data().id;
             let newComment = { commentText: $comment.val(), writerName: $user.val() };
             
-            let promise = this.postsRepository.addComment(newComment, postId);
-            promise.then(()=>{
+            this.postsRepository.addComment(newComment, postId).then(()=>{
                 this.postsRenderer.renderPosts(this.postsRepository.posts);
                 $comment.val("");
                 $user.val("");
@@ -71,7 +67,6 @@ class EventsHandler {
 
     registerRemoveComment() {
         this.$posts.on('click', '.remove-comment', (event) => {
-            let $commentsList = $(event.currentTarget).closest('.post').find('.comments-list');
             let postId = $(event.currentTarget).closest('.post').data().id;
             let commentId = $(event.currentTarget).closest('.comment').data().id;
             this.postsRepository.deleteComment(postId, commentId).then(()=>{

@@ -12,23 +12,48 @@ class PostsRepository {
     }
 
     addPost(postText) {
-      return $.post('/addPost', {postText: postText}).then((data)=>{
+      return $.post('/posts', {postText: postText}).then((data)=>{
             this.posts = data;
         })
     }
 
     removePost(id) {
-        return $.post('/deletePost', {id: id}).then((data)=>{this.posts=data})
+        return $.ajax({
+            url: '/posts/' + id,
+            method: 'DELETE',
+            contentType: 'application/json',
+            success: (data)=> {
+                this.posts=data;
+            },
+            error: (request,msg,error)=> {
+                console.log(error)
+            }
+        }); 
+        
+        
+        // $.post('/deletePost', {id: id}).then((data)=>{this.posts=data})
     }
     
     addComment(newComment, postId) {
-        return $.post('/addComment', {commentText: newComment.commentText, writerName: newComment.writerName, postId: postId}).then((data)=>{
+        return $.post('/comments', {commentText: newComment.commentText, writerName: newComment.writerName, postId: postId}).then((data)=>{
             this.posts = data;
         })
     };
 
     deleteComment(postId, commentId) {
-        return $.post('/deleteComment', {commentId: commentId, postId: postId}).then((data)=>{this.posts=data})
+        return $.ajax({
+            url: '/comments/' + postId + "/" + commentId,
+            method: 'DELETE',
+            contentType: 'application/json',
+            success: (data)=> {
+                this.posts=data;
+            },
+            error: (request,msg,error)=> {
+                console.log(error)
+            }
+        }); 
+        
+        // $.post('/comments/', {commentId: commentId, postId: postId}).then((data)=>{this.posts=data})
     };
 }
 
