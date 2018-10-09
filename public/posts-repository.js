@@ -52,6 +52,16 @@ class PostsRepository {
             }
         });         
     };
+
+    async updateComment(commentId, commentText){
+        return $.ajax({
+            url: '/comments/' + commentId + "/" + commentText,
+            type: 'PUT',
+            success: function(data) {
+                this.posts=data;
+            }
+        });
+    }
 }
 
 export default PostsRepository

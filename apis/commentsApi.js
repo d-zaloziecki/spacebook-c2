@@ -46,4 +46,17 @@ router.delete('/:postId/:commentId', (req, res) => {
     })
 })
 
+// update a comment
+
+router.put('/:commentId/:commentText', (req,res)=>{
+    let commentId = req.params.commentId;
+    let commentText = req.params.commentText;
+
+    Post.findOneAndUpdate({ _id: commentId }, {commentText: commentText}, (err) => {
+        Post.find({}).populate('comments').exec((err, posts) => {
+            res.send(posts)
+        })
+    })
+})
+
 module.exports = router

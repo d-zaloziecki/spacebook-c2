@@ -12,3 +12,5 @@ eventsHandler.registerRemovePost();
 eventsHandler.registerToggleComments();
 eventsHandler.registerAddComment();
 eventsHandler.registerRemoveComment();
+eventsHandler.registerSaveUpdateComment()
+eventsHandler.registerUpdateComment()
